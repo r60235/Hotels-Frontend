@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useFetch from "../src/useFetch";
 
 const Hotels = () => {
   const { data, loading, error } = useFetch("https://hotels-backend-vert.vercel.app/hotels");
   const [deleteMessage, setDeleteMessage] = useState('');
 
+
   const handleDelete = async (hotelId) => {
     try {
       const response = await fetch(`https://hotels-backend-vert.vercel.app/hotels/${hotelId}`, {
         method: 'DELETE',
       });
-      const result = await response.json();
-      if (response.ok) {
-        setDeleteMessage(result.message);  
-        window.location.reload();
 
-      } else {
-        setDeleteMessage('Failed to delete the hotel.');
-      }
+      if (!response.ok) {
+        throw "Failed to delete hotel";
+
+      } 
+
+      const deletedHotel=    await response.json();
+      if(deletedHotel){
+        setDeleteMessage("Hotel Deleted Successfully");
+      }   
     } catch (error) {
       setDeleteMessage('Error deleting hotel.');
     }
@@ -34,7 +37,7 @@ const Hotels = () => {
         {data?.map((hotel) => (
           <li key={hotel._id}>
             {hotel.name}
-            <button onClick={() => handleDelete(hotel._id)}>   Delete</button>
+            <button onClick={() => handleDelete(hotel._id)}>Delete</button>
           </li>
         ))}
       </ul>
