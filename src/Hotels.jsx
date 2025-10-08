@@ -20,6 +20,8 @@ const Hotels = () => {
       const deletedHotel=    await response.json();
       if(deletedHotel){
         setDeleteMessage("Hotel Deleted Successfully");
+        window.location.reload();
+
       }   
     } catch (error) {
       setDeleteMessage('Error deleting hotel.');
